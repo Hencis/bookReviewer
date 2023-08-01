@@ -16,16 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
-@WebServlet(name = "UsersApi", urlPatterns = "/users")
-public class UserController extends HttpServlet {
+@WebServlet(name = "DeleteUsersApi", urlPatterns = "/deleteUser")
+public class DeleteUserController extends HttpServlet {
 
     private Logger log = LoggerFactory.getLogger(UserController.class);
-    ObjectMapper objectMapper = new ObjectMapper();
     private final UserService userService;
 
-    public UserController() {
+    public DeleteUserController() {
         EntityManagerFactory entityManagerFactory =
                 Persistence.createEntityManagerFactory("BookReviewer");
         this.userService = new UserService(
@@ -34,18 +32,7 @@ public class UserController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.info("GET all Users...");
-        StringBuffer output = new StringBuffer();
-        output.append(objectMapper.writeValueAsString(userService.findAll()));
-        PrintWriter out = response.getWriter();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        out.print(output);
-    }
-
-    @Override
-    public void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             String email = request.getSession().getAttribute("user").toString();
             User loggedInUser = userService.getUserByEmail(email);
@@ -53,7 +40,7 @@ public class UserController extends HttpServlet {
             request.getSession().setAttribute("userId", userId);
             if (loggedInUser.getId() == userId) {
                 userService.deleteAccount(email);
-                 response.sendRedirect(request.getContextPath());
+                response.sendRedirect(request.getContextPath() + "/");
             } else {
                 throw new ServletException("Can't delete account which is not yours.");
             }
@@ -62,4 +49,5 @@ public class UserController extends HttpServlet {
             throw new ServletException(e.getMessage());
         }
     }
+
 }

@@ -24,7 +24,6 @@ public class BookReviewRepository {
         return typedQuery.getResultList();
     }
 
-    // Implement method which finds book review based on book id
     public List<BookReview> getReviewsByBookId(int bookId) {
         try {
             TypedQuery<BookReview> typedQuery = entityManager.createQuery(
@@ -69,6 +68,7 @@ public class BookReviewRepository {
         }
     }
 
+
     public int deleteReview(Integer userId, Integer bookId) {
         try {
             entityManager.getTransaction().begin();
@@ -79,6 +79,24 @@ public class BookReviewRepository {
             int rowsModified = query.executeUpdate();
             entityManager.getTransaction().commit();
             entityManager.flush();
+            entityManager.clear();
+            return rowsModified;
+        } catch (NoResultException e) {
+            throw new InvalidParameterException("User is not found in the database userid");
+        }
+    }
+
+    public int updateReview(Integer userId, Integer bookId, String reviewMessage, Integer rating) {
+        try {
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery(
+                    "UPDATE BookReview r SET r.reviewMessage = :reviewMessage, r.rating = :rating" + " WHERE r.user.id = :userId AND r.book.id = :bookId");
+            query.setParameter("userId", userId);
+            query.setParameter("bookId", bookId);
+            query.setParameter("reviewMessage", reviewMessage);
+            query.setParameter("rating", rating);
+            int rowsModified = query.executeUpdate();
+            entityManager.getTransaction().commit();
             entityManager.clear();
             return rowsModified;
         } catch (NoResultException e) {

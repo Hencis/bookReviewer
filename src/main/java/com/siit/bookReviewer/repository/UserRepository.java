@@ -1,20 +1,14 @@
 package com.siit.bookReviewer.repository;
 
 import com.siit.bookReviewer.model.User;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 
 import java.security.InvalidParameterException;
 import java.util.List;
 
 public class UserRepository {
 
-//  EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("Eclipselink_JPA");
-//  EntityManager entityManager = emFactory.createEntityManager();
-//
-private final EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public UserRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -62,6 +56,50 @@ private final EntityManager entityManager;
                     .getSingleResult();
         } catch (NoResultException e) {
             throw new InvalidParameterException("User is not found in the database userId");
+        }
+    }
+
+    public void deleteAccount(String email) {
+        try {
+            entityManager.getTransaction().begin();
+
+            String userIdQuery = "SELECT u.id FROM User u WHERE u.email = :email";
+            Integer userId = entityManager.createQuery(userIdQuery, Integer.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+
+            String deleteBookReviewsQuery = "DELETE FROM BookReview br WHERE br.user.id = :userId";
+            entityManager.createQuery(deleteBookReviewsQuery)
+                    .setParameter("userId", userId)
+                    .executeUpdate();
+
+            String deleteUserQuery = "DELETE FROM User u WHERE u.email = :email";
+            entityManager.createQuery(deleteUserQuery)
+                    .setParameter("email", email)
+                    .executeUpdate();
+
+            entityManager.getTransaction().commit();
+            entityManager.clear();
+
+        } catch (NoResultException e) {
+            throw new InvalidParameterException("User is not found in the database userid");
+        }
+    }
+
+    public int updateUserInfo(String newFirstName, String newLastName, String email) {
+        try {
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery(
+                    "UPDATE User u SET u.firstName = :newFirstName, u.lastName = :newLastName" + " WHERE u.email = :email");
+            query.setParameter("email", email);
+            query.setParameter("newFirstName", newFirstName);
+            query.setParameter("newLastName", newLastName);
+            int rowsModified = query.executeUpdate();
+            entityManager.getTransaction().commit();
+            entityManager.clear();
+            return rowsModified;
+        } catch (NoResultException e) {
+            throw new InvalidParameterException("User is not found in the database userid");
         }
     }
 

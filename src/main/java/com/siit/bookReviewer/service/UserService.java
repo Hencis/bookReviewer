@@ -21,7 +21,7 @@ public class UserService {
     public UserLoginDTO checkIfExists(String email, String password) {
         try {
             User user = userRepository.checkIfExists(email, password);
-            return new UserLoginDTO(user.getId(), user.getEmail());
+            return new UserLoginDTO(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
         } catch (InvalidParameterException e) {
             throw new InvalidParameterException("User is not found in the database");
         }
@@ -37,5 +37,13 @@ public class UserService {
         } catch (EntityNotFoundException e) {
             throw e;
         }
+    }
+
+    public int updateUserInfo(String newFirstName, String newLastName, String email) {
+        return userRepository.updateUserInfo(newFirstName, newLastName, email);
+    }
+
+    public void deleteAccount(String email) {
+        userRepository.deleteAccount(email);
     }
 }

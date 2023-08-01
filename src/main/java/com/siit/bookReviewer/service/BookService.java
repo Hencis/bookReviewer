@@ -14,8 +14,14 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<Book> findAll() {return bookRepository.findAll();}
+
+    public Book getBookById(Integer bookId) {
+        return bookRepository.getBookById(bookId);
+    }
+
+    public String getBookTitleById(Integer bookId) {
+        return bookRepository.getBookTitleById(bookId);
     }
 
 

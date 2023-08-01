@@ -24,4 +24,18 @@ public class Book {
 
     @OneToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER, mappedBy = "book")
     List<BookReview> ratings;
+
+    public Book(Integer id, String title, String author, String description, String genre) {
+        this.id=id;
+        this.title=title;
+        this.author=author;
+        this.description=description;
+        this.genre=genre;
+    }
+
+    public Book(Integer id, String title, String author) {
+        this.id=id;
+        this.title=title;
+        this.author=author;
+    }
 }

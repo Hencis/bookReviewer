@@ -27,11 +27,8 @@ public class LoginController extends HttpServlet {
     private final UserService userService;
 
     public LoginController() {
-        EntityManagerFactory entityManagerFactory =
-                Persistence.createEntityManagerFactory("BookReviewer");
-        this.userService = new UserService(
-                new UserRepository(entityManagerFactory.createEntityManager())
-        );
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BookReviewer");
+        this.userService = new UserService(new UserRepository(entityManagerFactory.createEntityManager()));
     }
 
     @Override
@@ -53,11 +50,13 @@ public class LoginController extends HttpServlet {
         try {
             UserLoginDTO user = userService.checkIfExists(email, password);
             session.setAttribute("user", user.getEmail());
+            session.setAttribute("firstName", user.getFirstName());
+            session.setAttribute("lastName", user.getLastName());
             response.sendRedirect("mainPage");
         } catch (InvalidParameterException e) {
             log.info(e.getMessage());
             session.setAttribute("status", "failed");
-            request.getRequestDispatcher("login").forward(request, response);
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
     }
 }

@@ -7,6 +7,7 @@ import com.siit.bookReviewer.repository.BookRepository;
 import com.siit.bookReviewer.repository.BookReviewRepository;
 import com.siit.bookReviewer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +29,13 @@ public class BookReviewService {
     }
 
     public void add(String email, int bookId, String reviewMessage, Integer rating) {
-        User user = userRepository.getUserByEmail(email);
-        Book book = bookRepository.getBookById(bookId);
-        bookReviewRepository.add(user, book, reviewMessage, rating);
+        try {
+            User user = userRepository.getUserByEmail(email);
+            Book book = bookRepository.getBookById(bookId);
+            bookReviewRepository.add(user, book, reviewMessage, rating);
+        } catch (ConstraintViolationException e) {
+            throw e;
+        }
     }
 
     public List<BookReview> findAllByBookId(int bookId) {
@@ -39,5 +44,13 @@ public class BookReviewService {
 
     public int deleteReview(Integer userId, Integer bookId) {
         return bookReviewRepository.deleteReview(userId, bookId);
+    }
+
+    public BookReview getReviewByUserAndBookId(Integer userId, Integer bookId){
+        return bookReviewRepository.getReviewByUserAndBookId(userId, bookId);
+    }
+
+    public int updateReview(Integer userId, Integer bookId, String newReviewMessage, Integer newRating) {
+        return bookReviewRepository.updateReview(userId, bookId, newReviewMessage, newRating);
     }
 }

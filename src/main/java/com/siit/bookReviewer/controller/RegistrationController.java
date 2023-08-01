@@ -6,7 +6,6 @@ import com.siit.bookReviewer.repository.UserRepository;
 import com.siit.bookReviewer.service.UserService;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,19 +33,20 @@ public class RegistrationController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String firstName = req.getParameter("firstName");
-        String lastName = req.getParameter("lastName");
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.info("Registration...");
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        HttpSession session = request.getSession();
 
         User user = new User(firstName, lastName, email, password);
         userService.add(user);
-        HttpSession session = req.getSession();
-        session.setAttribute("email", email);
-
-        RequestDispatcher reqd = req.getRequestDispatcher("mainPage");
-        reqd.forward(req, resp);
+        session.setAttribute("user", email);
+        session.setAttribute("firstName", firstName);
+        session.setAttribute("lastName", lastName);
+        response.sendRedirect("mainPage");
     }
 
 }

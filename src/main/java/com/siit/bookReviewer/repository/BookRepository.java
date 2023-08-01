@@ -8,11 +8,7 @@ import jakarta.persistence.TypedQuery;
 import java.security.InvalidParameterException;
 import java.util.List;
 
-
 public class BookRepository {
-
-//    EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("Eclipselink_JPA");
-//   EntityManager entityManager = emFactory.createEntityManager();
 
     private final EntityManager entityManager;
 
@@ -40,6 +36,17 @@ public class BookRepository {
     public Book getBookById(int bookId) {
         try {
             TypedQuery<Book> typedQuery = entityManager.createQuery("select b from Book b WHERE b.id = :bookId", Book.class);
+            return typedQuery
+                    .setParameter("bookId", bookId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            throw new InvalidParameterException("Book is not found in the database bookId");
+        }
+    }
+
+    public String getBookTitleById(int bookId) {
+        try {
+            TypedQuery<String> typedQuery = entityManager.createQuery("select b.title from Book b WHERE b.id = :bookId", String.class);
             return typedQuery
                     .setParameter("bookId", bookId)
                     .getSingleResult();

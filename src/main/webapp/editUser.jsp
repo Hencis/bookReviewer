@@ -1,11 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="com.siit.bookReviewer.service.BookService" %>
 <%@ page import="com.siit.bookReviewer.repository.BookRepository" %>
-<%@ page import="com.siit.bookReviewer.controller.BookReviewController" %>
-<%@ page import="com.siit.bookReviewer.service.BookReviewService" %>
-<%@ page import="com.siit.bookReviewer.model.BookReview" %>
-<%@ page import="com.siit.bookReviewer.service.UserService" %>
+<%@ page import="com.siit.bookReviewer.controller.MainPageController" %>
 <%@ page import="com.siit.bookReviewer.model.Book" %>
-<%@ page import="com.siit.bookReviewer.model.User" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.google.gson.Gson" %>
 
@@ -56,7 +53,7 @@ body {
     border: 10px;
 }
 
-.reviews {
+.editUser {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -65,35 +62,14 @@ body {
 	height:300px;
 }
 
-.reviews h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
+.editUser h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
 
-.reviews h3 {
+.editUser h3 {
   color: white;
   font-size: 13px;
   text-align: center;
   letter-spacing: 1px;
 }
-
-.reviews table {
-  background-color: white;
-}
-
-
-
- .image-container img {
-         display: flex; /* Use flexbox to make sure frame adjusts to content size */
-             justify-content: center; /* Center the content horizontally within the frame */
-             align-items: center; /* Center the content vertically within the frame */
-             position: absolute;
-             top: 50%;
-             left: 50%;
-             transform: translate(-50%, -50%); /* Center the frame with negative margins */
-             padding: 300px; /* Increase padding to create a bigger frame */
-              background-color: rgba(240, 240, 240, 0.2); /* Transparent white background */
-             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a box shadow for a 3D effect */
-             border: 10px;
-             opacity: 0.5;
-        }
 
 input {
 	width: 100%;
@@ -117,77 +93,48 @@ input {
 input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2); }
 </style>
 
-<div class="image-container">
- <img src="images/bookb.jpeg" alt="Your Transparent Image">
-<div class="reviews">
+
+<div class="frame">
+<div class="editUser">
+
 <html>
-<head>
-  <meta charset="UTF-8">
-  <h1> Reviews for the <%=  request.getAttribute("bookTitle") %> book </h1>
-</head>
-<body>
-<table border="1">
-        <tr>
-            <tr>
-                <th>User</th>
-                <th>Review</th>
-                <th>Rating</th>
-                <th>Delete review</th>
-                <th>Edit review</th>
-            </tr>
-        </tr>
-        <%
-           List<BookReview> bookReviews = (List<BookReview>) request.getAttribute("bookReviews");
-           if (bookReviews != null) {
-             for (BookReview review : bookReviews) {  %>
-            <tr>
-                <td><%= review.getUser().getFirstName() %></td>
-                <td><%= review.getReviewMessage() %></td>
-                <td><%= review.getRating() %></td>
-                <td> <button id=<%=review.getUser().getId()%> class="float-left submit-button" value=<%=review.getUser().getId()%>>Delete Review</button>
-                                <script type="text/javascript">
-                                   document.getElementById(<%=review.getUser().getId()%>).onclick = function () {
-                                   fetch("reviews?id=" + <%=review.getBook().getId()%> + "&userId=" + <%=review.getUser().getId()%>, {
-                                   method: 'DELETE'
-                                     })
-                                   };
-                                 </script> </td>
-                <td> <form action="edit" method="get">
-                  <input type="hidden" name="reviewId" value="<%= review.getId() %>">
-                  <input type="hidden" name="bookId" value="<%= review.getBook().getId() %>">
-                  <input type="hidden" name="userId" value="<%= review.getUser().getId() %>">
-                  <input type="submit" value="Edit Review">
-                </form> </td>
+   <head>
+     <meta charset="UTF-8">
+      <title>Edit your ...</title>
+   </head>
+   <body>
+     <h3>Logged in user: <%=request.getSession().getAttribute("user")%></h3>
+     <h3>Last Name: <%=request.getSession().getAttribute("lastName")%></h3>
+     <h3>First Name: <%=request.getSession().getAttribute("firstName")%></h3>
+      <h3>User Id: <%=request.getSession().getAttribute("userId")%></h3>
+
+     <form method="post" action="editUser">
+             <div class="form-outline mb-4">
+                 <input type="text" name="newFirstName"  value="New First Name" onclick="this.value=''"/><br/>
+             </div>
+             <div class="form-outline mb-4">
+                 <input type="text" name="newLastName" value="New Last Name" onclick="this.value=''"/><br/>
+             </div>
+
+         <br/>
+         <input type="submit" value="Update" class="btn btn-primary btn-block"/>
+
+         </form>
+
+         <br>
+         <br>
+         <br>
+
+       <button class="btn btn-primary btn-block" id=<%=request.getSession().getAttribute("userId")%>  value=<%=request.getSession().getAttribute("userId")%>>Delete Account</button>
+                                   <script type="text/javascript">
+                                         document.getElementById(<%=request.getSession().getAttribute("userId")%>).onclick = function () {
+                                         location.href = "deleteUser";
+                                             };
+                                   </script>
 
 
-            </tr>
-            <% } }
-            else { %>
-                         <tr>
-                          <td colspan="4">No bookReviews found</td>
-                         </tr>
-              <% } %>
-        </table>
 
-
-</br>
-</br>
-<form method="post" action="reviews?id=<%=request.getAttribute("bookId")%>&email=<%=request.getSession().getAttribute("user")%>">
-        <div class="form-outline mb-4">
-                    <input type="text" name="reviewMessage"  value="Add Review" onclick="this.value=''"/><br/>
         </div>
-         <div class="form-outline mb-4">
-                            <label for="rating">Rating</label>
-                              <select name="rating" id="rating">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                              </select>
-                </div>
-        <input type="submit" value="Add Review and Rating!" class="btn btn-primary btn-block"/>
- </form>
- </div>
-</body>
+      </div>
+   </body>
 </html>
