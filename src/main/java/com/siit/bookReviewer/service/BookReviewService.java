@@ -53,4 +53,8 @@ public class BookReviewService {
     public int updateReview(Integer userId, Integer bookId, String newReviewMessage, Integer newRating) {
         return bookReviewRepository.updateReview(userId, bookId, newReviewMessage, newRating);
     }
+
+    public Double calculateAverageRatingForBook(Integer bookId) {
+        return bookReviewRepository.calculateAverageRatingForBook(bookId);
+    }
 }

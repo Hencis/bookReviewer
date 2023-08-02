@@ -1,15 +1,3 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="com.siit.bookReviewer.repository.BookRepository" %>
-<%@ page import="com.siit.bookReviewer.controller.BookReviewController" %>
-<%@ page import="com.siit.bookReviewer.controller.EditReviewController" %>
-<%@ page import="com.siit.bookReviewer.service.BookReviewService" %>
-<%@ page import="com.siit.bookReviewer.model.BookReview" %>
-<%@ page import="com.siit.bookReviewer.service.UserService" %>
-<%@ page import="com.siit.bookReviewer.model.Book" %>
-<%@ page import="com.siit.bookReviewer.model.User" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.google.gson.Gson" %>
-
 <!DOCTYPE html><html lang='en' class=''>
 <head><script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="https://codepen.io/frytyler/pen/EGdtg" />
 
@@ -57,107 +45,12 @@ body {
     border: 10px;
 }
 
-.editR {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin: -150px 0 0 -150px;
-	width:300px;
-	height:300px;
-}
-
-.editR h1 { color: #fff; text-shadow: 0 0 6px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
-
-.editR h3 {
-  color: white;
-  font-size: 16px;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-.editR table {
-  background-color: white;
-}
-
-
-
- .image-container img {
-         display: flex; /* Use flexbox to make sure frame adjusts to content size */
-             justify-content: center; /* Center the content horizontally within the frame */
-             align-items: center; /* Center the content vertically within the frame */
-             position: absolute;
-             top: 50%;
-             left: 50%;
-             transform: translate(-50%, -50%); /* Center the frame with negative margins */
-             padding: 300px; /* Increase padding to create a bigger frame */
-              background-color: rgba(240, 240, 240, 0.2); /* Transparent white background */
-             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Optional: Add a box shadow for a 3D effect */
-             border: 10px;
-             opacity: 0.5;
-        }
-
-input {
-	width: 100%;
-	margin-bottom: 10px;
-	background: rgba(0,0,0,0.3);
-	border: none;
-	outline: none;
-	padding: 10px;
-	font-size: 13px;
-	color: #fff;
-	text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
-	border: 1px solid rgba(0,0,0,0.3);
-	border-radius: 4px;
-	box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
-	-webkit-transition: box-shadow .5s ease;
-	-moz-transition: box-shadow .5s ease;
-	-o-transition: box-shadow .5s ease;
-	-ms-transition: box-shadow .5s ease;
-	transition: box-shadow .5s ease;
-}
-input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2); }
+.h2 { text-align:center; color:white; }
 </style>
 
-<div class="image-container">
- <img src="images/bookb.jpeg" alt="Your Transparent Image">
-<div class="editR">
+
 <html>
-     <head>
-  <meta charset="UTF-8">
-   <button onclick="goToMainPage()">Back to Main Page</button>
-
-        <script>
-            function goToMainPage() {
-                window.location.href = "mainPage";
-            }
-        </script>
-  <h3> Looks like you have changed your mind</h3>
-     </head>
-     <body>
-         <%
-              BookReview bookReview = (BookReview) request.getAttribute("bookReview");
-          %>
-          <h3> Your review for the <%= bookReview.getBook().getTitle() %> book </h3>
-            <td>  <p>Review Message: <%= bookReview.getReviewMessage() %></p> </td>
-            <td> <p>Rating: <%= bookReview.getRating() %></p> </td>
-
-          <form method="post" action="edit?reviewId=<%=request.getAttribute("reviewId")%>&bookId=<%=request.getAttribute("bookId")%>&userId=<%=request.getAttribute("userId")%>">
-                  <div class="form-outline mb-4">
-                              <input type="text" name="reviewMessage"  value="Add New Review" onclick="this.value=''"/><br/>
-                  </div>
-                   <div class="form-outline mb-4">
-                                      <label for="rating">Rating</label>
-                                        <select name="rating" id="rating">
-                                          <option value="1">1</option>
-                                          <option value="2">2</option>
-                                          <option value="3">3</option>
-                                          <option value="4">4</option>
-                                          <option value="5">5</option>
-                                        </select>
-                          </div>
-                  <input type="submit" value="Update Review and Rating!" class="btn btn-primary btn-block"/>
-           </form>
-         </div>
-         </div>
-     </body>
+    <body>
+        <h2>The average rating for <%=request.getAttribute("bookTitle")%>: <%=request.getAttribute("averageRating")%></h2>
+    </body>
 </html>

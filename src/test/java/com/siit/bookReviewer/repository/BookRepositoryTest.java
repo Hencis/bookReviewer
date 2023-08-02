@@ -42,7 +42,6 @@ class BookRepositoryTest {
         when(bookRepository.findAll()).thenReturn(testingBooks);
 
         List<Book> books = new ArrayList<>(bookService.findAll());
-        System.out.println(books);
 
         assertEquals(testingBooks.size(), books.size());
     }

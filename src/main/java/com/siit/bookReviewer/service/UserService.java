@@ -27,6 +27,15 @@ public class UserService {
         }
     }
 
+    public User checkIfExists2(String email, String password) {
+        try {
+            User user = userRepository.checkIfExists(email, password);
+            return new User( user.getEmail(), user.getPassword());
+        } catch (InvalidParameterException e) {
+            throw new InvalidParameterException("User is not found in the database");
+        }
+    }
+
     public void add(User user) {
         userRepository.addUser(user);
     }

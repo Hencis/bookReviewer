@@ -103,4 +103,25 @@ public class BookReviewRepository {
             throw new InvalidParameterException("User is not found in the database userid");
         }
     }
-}
+
+    public Double calculateAverageRatingForBook(Integer bookId) {
+
+            TypedQuery<Double> query = entityManager.createQuery(
+                    "SELECT AVG(br.rating) FROM BookReview br WHERE br.book.id = :bookId",
+                    Double.class
+            );
+            query.setParameter("bookId", bookId);
+
+            try {
+                Double averageRating = query.getSingleResult();
+                if (averageRating != null) {
+                    return averageRating;
+                }
+                else return 0.0;
+                }
+             catch (NoResultException e) {
+                return 0.0;
+            }
+        }
+    }
+

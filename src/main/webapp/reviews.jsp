@@ -123,6 +123,13 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
 <html>
 <head>
   <meta charset="UTF-8">
+  <button onclick="goToMainPage()">Back to Main Page</button>
+
+      <script>
+          function goToMainPage() {
+              window.location.href = "mainPage";
+          }
+      </script>
   <h1> Reviews for the <%=  request.getAttribute("bookTitle") %> book </h1>
 </head>
 <body>
@@ -137,9 +144,11 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
             </tr>
         </tr>
         <%
+           int counter = 0;
            List<BookReview> bookReviews = (List<BookReview>) request.getAttribute("bookReviews");
            if (bookReviews != null) {
-             for (BookReview review : bookReviews) {  %>
+             for (BookReview review : bookReviews) {
+             counter += 1; %>
             <tr>
                 <td><%= review.getUser().getFirstName() %></td>
                 <td><%= review.getReviewMessage() %></td>
@@ -158,6 +167,16 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                   <input type="hidden" name="userId" value="<%= review.getUser().getId() %>">
                   <input type="submit" value="Edit Review">
                 </form> </td>
+                <% if (counter == 1) { %>
+                 <button id=<%=review.getBook().getId()%> class="float-left submit-button" value=<%=review.getBook().getId()%>>Average rating for this book</button>
+                                                 <script type="text/javascript">
+                                                    document.getElementById(<%=review.getBook().getId()%>).onclick = function () {
+                                                    location.href = "averageRating?id=" + <%=review.getBook().getId()%>;
+                                                    };
+                                                  </script>
+                 <% } %>
+
+
 
 
             </tr>
@@ -188,6 +207,12 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                 </div>
         <input type="submit" value="Add Review and Rating!" class="btn btn-primary btn-block"/>
  </form>
+
+ <td> <form action="averageRating?id=<%=request.getAttribute("bookId")%>" method="get">
+                   <input type="hidden" name="bookId" value="<%= request.getAttribute("bookId") %>">
+                   <input type="submit" value="Average Rating">
+                 </form> </td>
+
  </div>
 </body>
 </html>
