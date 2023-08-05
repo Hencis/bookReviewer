@@ -103,10 +103,17 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
       <title>Edit your ...</title>
    </head>
    <body>
+     <button onclick="goToMainPage()">Back to Main Page</button>
+
+         <script>
+             function goToMainPage() {
+                 window.location.href = "mainPage";
+             }
+         </script>
+         <br>
      <h3>Logged in user: <%=request.getSession().getAttribute("user")%></h3>
      <h3>Last Name: <%=request.getSession().getAttribute("lastName")%></h3>
      <h3>First Name: <%=request.getSession().getAttribute("firstName")%></h3>
-      <h3>User Id: <%=request.getSession().getAttribute("userId")%></h3>
 
      <form method="post" action="editUser">
              <div class="form-outline mb-4">

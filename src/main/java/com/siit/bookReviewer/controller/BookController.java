@@ -8,6 +8,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +18,7 @@ import java.io.PrintWriter;
 public class BookController extends HttpServlet {
 
     ObjectMapper objectMapper = new ObjectMapper();
+    private Logger log = LoggerFactory.getLogger(UserController.class);
     private final BookRepository bookRepository;
 
     public BookController() {
@@ -27,6 +30,7 @@ public class BookController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.info("Get the books...");
         StringBuffer output = new StringBuffer();
         output.append(objectMapper.writeValueAsString(bookRepository.findAll()));
         PrintWriter out = response.getWriter();

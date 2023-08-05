@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "EditBookReviewApi", urlPatterns = "/edit")
+@WebServlet(name = "EditBookReviewApi", urlPatterns = { "/edit" , "/editMistake"})
 public class EditReviewController extends HttpServlet {
 
     private Logger log = LoggerFactory.getLogger(UserController.class);
@@ -64,7 +64,9 @@ public class EditReviewController extends HttpServlet {
             dispatcher.forward(request, response);
         }
         else {
-            throw new ServletException("Can't edit a review which is not yours.");
+         //   throw new ServletException("Can't edit a review which is not yours.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/editMistake.jsp");
+            dispatcher.forward(request, response);
         }
     }
 
@@ -86,6 +88,7 @@ public class EditReviewController extends HttpServlet {
                 response.sendRedirect("reviews?id=" + bookId);
             } else {
                 throw new ServletException("Can't edit a review which is not yours.");
+
             }
         } catch (EntityNotFoundException | IOException e) {
             log.info(e.getMessage());

@@ -61,16 +61,36 @@ body {
 	height:300px;
 }
 
+.table-container {
+ width:410px;
+ height:200px;
+ overflow:scroll;
+}
+
+
+
 .main table {
   background-color: white;
 }
-.main h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
 
+
+.main h1 {
+  color: white;
+  font-size: 30px;
+  text-align: center;
+  letter-spacing: 1px;
+}
 .main h3 {
   color: white;
   font-size: 13px;
   text-align: center;
   letter-spacing: 1px;
+}
+.logout-link {
+  background-color: white;
+  padding: 10px 20px; /* Optional: Add padding to create space around the link text */
+  text-decoration: none; /* Optional: Remove the default underline style */
+  color: black; /* Optional: Set the text color */
 }
 
 input {
@@ -106,7 +126,9 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
         <title>Main page displaying the books and the reviews</title>
     </head>
     <body>
-        <h2>Main page</h2>
+        <h1>Welcome!</h1>
+        </br>
+        </br>
   <button id="editUser" class="float-left submit-button" value="editUser">Edit User Info</button>
                                                         <script type="text/javascript">
                                                           document.getElementById("editUser").onclick = function () {
@@ -114,12 +136,13 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                                                           };
                                                         </script> </td>
 
-        <a href="logout.jsp">LogOut</a>
-
+        <a href="logout.jsp" class="logout-link">LogOut</a>
+          </br>
          <h3>You are logged in : <%=request.getSession().getAttribute("firstName")%> <%=request.getSession().getAttribute("lastName")%></h3>
-
+           </br>
         <body>
-            <h2>list of books</h2>
+
+            <div class="table-container">
             <table border="1">
                     <tr>
                         <th>Title</th>
@@ -151,6 +174,7 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                                    </tr>
                                    <% } %>
                                </table>
+                               </div>
 
 
         </body>

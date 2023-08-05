@@ -78,7 +78,11 @@ body {
   background-color: white;
 }
 
-
+.table-container {
+ width:370px;
+ height:200px;
+ overflow:scroll;
+}
 
  .image-container img {
          display: flex; /* Use flexbox to make sure frame adjusts to content size */
@@ -133,6 +137,7 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
   <h1> Reviews for the <%=  request.getAttribute("bookTitle") %> book </h1>
 </head>
 <body>
+<div class="table-container" >
 <table border="1">
         <tr>
             <tr>
@@ -154,13 +159,13 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                 <td><%= review.getReviewMessage() %></td>
                 <td><%= review.getRating() %></td>
                 <td> <button id=<%=review.getUser().getId()%> class="float-left submit-button" value=<%=review.getUser().getId()%>>Delete Review</button>
-                                <script type="text/javascript">
-                                   document.getElementById(<%=review.getUser().getId()%>).onclick = function () {
-                                   fetch("reviews?id=" + <%=review.getBook().getId()%> + "&userId=" + <%=review.getUser().getId()%>, {
-                                   method: 'DELETE'
-                                     })
-                                   };
-                                 </script> </td>
+                                                     <script type="text/javascript">
+                                                        document.getElementById(<%=review.getUser().getId()%>).onclick = function () {
+                                                         location.href = "deleteReviews?id=" + <%=review.getBook().getId()%> + "&userId=" + <%=review.getUser().getId()%>;
+                                                        };
+                                                      </script>
+
+ </td>
                 <td> <form action="edit" method="get">
                   <input type="hidden" name="reviewId" value="<%= review.getId() %>">
                   <input type="hidden" name="bookId" value="<%= review.getBook().getId() %>">
@@ -176,9 +181,6 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                                                   </script>
                  <% } %>
 
-
-
-
             </tr>
             <% } }
             else { %>
@@ -187,7 +189,7 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                          </tr>
               <% } %>
         </table>
-
+        </div>
 
 </br>
 </br>
@@ -207,11 +209,6 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
                 </div>
         <input type="submit" value="Add Review and Rating!" class="btn btn-primary btn-block"/>
  </form>
-
- <td> <form action="averageRating?id=<%=request.getAttribute("bookId")%>" method="get">
-                   <input type="hidden" name="bookId" value="<%= request.getAttribute("bookId") %>">
-                   <input type="submit" value="Average Rating">
-                 </form> </td>
 
  </div>
 </body>

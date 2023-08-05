@@ -68,6 +68,23 @@ public class BookReviewRepository {
         }
     }
 
+    public boolean checkIfReviewExists(String email, Integer bookId) {
+        try {
+            TypedQuery<BookReview> typedQuery = entityManager.createQuery(
+                    "SELECT br FROM BookReview br WHERE br.user.email = :email AND br.book.id = :bookId",
+                    BookReview.class
+            );
+            typedQuery.setParameter("email", email);
+            typedQuery.setParameter("bookId", bookId);
+            typedQuery.setMaxResults(1); // Limit the result to one record
+
+            BookReview bookReview = typedQuery.getSingleResult();
+            return bookReview != null;
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
+
 
     public int deleteReview(Integer userId, Integer bookId) {
         try {
@@ -78,7 +95,7 @@ public class BookReviewRepository {
             query.setParameter("bookId", bookId);
             int rowsModified = query.executeUpdate();
             entityManager.getTransaction().commit();
-            entityManager.flush();
+            //entityManager.flush();
             entityManager.clear();
             return rowsModified;
         } catch (NoResultException e) {

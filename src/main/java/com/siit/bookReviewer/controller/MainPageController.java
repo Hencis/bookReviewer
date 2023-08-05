@@ -51,7 +51,6 @@ public class MainPageController extends HttpServlet {
         if (request.getSession().getAttribute("user") == null) {
             log.info("The user must be logged in in order to access the main page.");
             throw new ServletException("The user must be logged in in order to access the main page.");
-            // This will be replaced with a custom jsp file to redirect to the Login page
         } else {
             StringBuffer output = new StringBuffer();
             List<Book> books = bookService.findAll();

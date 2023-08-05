@@ -57,4 +57,8 @@ public class BookReviewService {
     public Double calculateAverageRatingForBook(Integer bookId) {
         return bookReviewRepository.calculateAverageRatingForBook(bookId);
     }
+
+    public boolean checkIfReviewExists(String email, Integer bookId) {
+        return bookReviewRepository.checkIfReviewExists(email, bookId);
+    }
 }
